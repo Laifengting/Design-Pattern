@@ -1,0 +1,289 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 标题
+title Java集合框架图
+
+package java.lang{
+	interface Comparable<T>
+}
+
+package java.util{
+
+	interface Iterator<E>
+
+		interface ListIterator<E>
+		ListIterator -up-|> Iterator
+
+	interface Iterable<E>
+	Iterable .left.> Iterator
+
+		interface Collection<E>
+		Collection -left-|> Iterable
+
+			class AbstractCollection<E>
+			AbstractCollection .up.|> Collection
+
+			interface List<E>
+			List -up-|> Collection
+			List ..> ListIterator
+
+				class AbstractList<E>
+				AbstractList -up-|> AbstractCollection
+				AbstractList .up.|> List
+
+				class AbstractSequentialList<E>
+				AbstractSequentialList -up-|> AbstractCollection
+
+					class LinkedList<E>
+					LinkedList -up-|> AbstractSequentialList
+					LinkedList .up.|> List
+					LinkedList .up.|> Deque
+
+				class Vector<E>
+				Vector -up-|> AbstractCollection
+				Vector .up.|> List
+
+					class Stack<E>
+					Stack -up-|> Vector
+
+				class ArrayList<E>
+				ArrayList -up-|> AbstractList
+				ArrayList .up.|> List
+
+			interface Set<E>
+			Set -up-|> Collection
+
+				interface SortedSet<E>
+				SortedSet -up-|> Set
+
+					interface NavigableSet<E>
+					NavigableSet -up-|> SortedSet
+
+				class AbstractSet<E>
+				AbstractSet -up-|> AbstractCollection
+				AbstractSet .up.|> Set
+
+					class HashSet<E>
+					HashSet -up-|> AbstractSet
+					HashSet .up.|> Set
+
+						class LinkedHashSet<E>
+						LinkedHashSet -up-|> HashSet
+						LinkedHashSet .up.|> Set
+
+					class TreeSet<E>
+					TreeSet -up-|> AbstractSet
+					TreeSet .up.|> NavigableSet
+
+			interface Queue<E>
+			Queue -up-|> Collection
+
+				interface Deque<E>
+				Deque -up-|> Queue
+
+			Interface Map<K,V>
+			Map .left.> Collection
+
+				interface Map.Entry<K,​V>
+				Map *-- Map.Entry
+
+
+				class Hashtable<K,​V>
+				Hashtable .up.|> Map
+
+				interface SortedMap<K,​V>
+				SortedMap -up-|> Map
+
+					interface NavigableMap<K,​V>
+					NavigableMap -up-|> SortedMap
+
+				abstract class AbstractMap<K,​V>
+				AbstractMap .up.|> Map
+
+					class IdentityHashMap<K,​V>
+					IdentityHashMap -up-|> AbstractMap
+					IdentityHashMap .up.|> Map
+
+					class WeakHashMap<K,​V>
+					WeakHashMap -up-|> AbstractMap
+					WeakHashMap .up.|> Map
+
+					class HashMap<K,​V>
+					HashMap -up-|> AbstractMap
+					HashMap .up.|> Map
+
+				class LinkedHashMap<K,​V>
+				LinkedHashMap -up-|> HashMap
+				LinkedHashMap .up.|> Map
+
+					class TreeMap<K,​V>
+					TreeMap -up-|> AbstractMap
+					TreeMap .up.|> NavigableMap
+
+	class Collections
+	Collections o-- List
+	Collections o-- Map
+	Collections o-- Set
+
+	class Arrays
+	Arrays ..> List
+
+	interface Comparator<T>
+	Comparator ..> Comparable
+}
+note bottom of Collection
+Collection 接口
+Collection 是最基本的集合接口，一个 Collection 代表一组 Object，
+即 Collection 的元素, Java不提供直接继承自Collection的类，
+只提供继承于的子接口(如List和set)。
+Collection 接口存储一组不唯一，无序的对象。
+end note
+
+note bottom of List
+List 接口
+List接口是一个有序的 Collection，使用此接口能够精确的控制每个元素插入的位置，
+能够通过索引(元素在List中位置，类似于数组的下标)来访问List中的元素，
+第一个元素的索引为 0，而且允许有相同的元素。
+List 接口存储一组不唯一，有序（插入顺序）的对象。
+end note
+
+note bottom of Set
+Set 接口
+Set 具有与 Collection 完全一样的接口，
+只是行为上不同，Set 不保存重复的元素。
+Set 接口存储一组唯一，无序的对象。
+end note
+
+note bottom of SortedSet
+SortedSet 接口
+继承于Set保存有序的集合。
+end note
+
+note bottom of Map
+Map 接口
+Map 接口存储一组键值对象，提供key（键）到value（值）的映射。
+end note
+
+note bottom of Map.Entry
+Map.Entry 接口
+描述在一个Map中的一个元素（键/值对）。是一个Map的内部类。
+end note
+
+note bottom of 	SortedMap
+SortedMap 接口
+继承于 Map，使 Key 保持在升序排列。
+end note
+
+note AS 集合注释
+【集合整体说明】
+1. 所有集合类都位于java.util包下。Java的集合类主要由两个接口派生而出：Collection和Map，Collection和Map是Java集合框架的根接口，这两个接口又包含了一些子接口或实现类。
+2. 集合接口：6个接口（短虚线表示），表示不同集合类型，是集合框架的基础。
+3. 抽象类：5个抽象类（长虚线表示），对集合接口的部分实现。可扩展为自定义集合类。
+4. 实现类：8个实现类（实线表示），对接口的具体实现。
+5. Collection 接口是一组允许重复的对象。
+6. Set 接口继承 Collection，集合元素不重复。
+7. List 接口继承 Collection，允许重复，维护元素插入顺序。
+8. Map接口是键值对，与Collection接口没有什么关系。
+9. Set、List和Map可以看做集合的三大类：
+	List集合是有序集合，集合中的元素可以重复，访问集合中的元素可以根据元素的索引来访问。
+	Set集合是无序集合，集合中的元素不可以重复，访问集合中的元素只能根据元素本身来访问（也是集合里元素不允许重复的原因）。
+	Map集合中保存Key-value对形式的元素，访问时只能根据每项元素的key来访问其value。
+
+
+end note
+集合注释 .. java.util
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

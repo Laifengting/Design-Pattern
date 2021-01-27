@@ -1,0 +1,215 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 标题
+title 迭代器模式原理图
+
+' 说明文字
+'caption 迭代器模式
+
+' 页眉
+left header
+迭代器模式原理图
+end header
+
+' 页脚
+right footer
+迭代器模式原理图
+end footer
+
+'' 图例说明
+'legend top
+'【需求】
+'公司考核若干个大学生和研究生，以决定是否录用。在这个问题中,大学生和研究生都有自己的成绩，
+'但是他们不能依据自己的成绩单制定录用标准，录用标准必须是公司来确定。
+'end legend
+
+
+
+
+
+' 正文开始
+interface Iterator<E>{
+	+ {abstract} hasNext(): boolean
+	+ {abstract} next(): E
+	+ {abstract} remove(): void
+}
+note right of Iterator
+迭代器接口
+JDK自带接口
+定义操作具体元素类的三个方法:
+hasNext(),next(),remove()。
+end note
+
+class ConcreteIteratorA{
+	- elementList: ArrayList<Element>
+	+ hasNext(): boolean
+	+ next(): Element
+	+ remove(): void
+}
+class ConcreteIteratorB{
+	- elements: Element[]
+	+ hasNext(): boolean
+	+ next(): Element
+	+ remove(): void
+}
+ConcreteIteratorA .down.|> Iterator
+ConcreteIteratorB .up.|> Iterator
+note as ConcreteIteratorNote
+具体迭代器类
+实现了Iterator接口中声明的每个操作。
+给具体的迭代对象制定具体的规则。
+end note
+ConcreteIteratorNote .. ConcreteIteratorA
+ConcreteIteratorNote .. ConcreteIteratorB
+
+interface Aggregate{
+	+ {method} create(): Iterator
+}
+note left of Aggregate
+聚合接口
+定义了一个创建迭代器对象的方法，
+将客户端和具体聚合类解耦。
+end note
+
+class ConcreteAggregateA{
+	- elementList: ArrayList<Element>
+	+ {method} create(): Iterator
+}
+ConcreteAggregateA .down.|> Aggregate
+class ConcreteAggregateB{
+	- elements: Element[]
+	+ {method} create(): Iterator
+}
+ConcreteAggregateB .up.|> Aggregate
+ConcreteAggregateB .left.> ConcreteIteratorB
+ConcreteAggregateA .left.> ConcreteIteratorA
+note as ConcreteAggregateNote
+具体聚合类
+实现了Aggregate接口中的抽象方法。
+返回一个迭代器，该迭代器可以正确遍历集合。
+持有对象集合。
+end note
+ConcreteAggregateNote .left. ConcreteAggregateA
+ConcreteAggregateNote .. ConcreteAggregateB
+
+class Element
+
+Element -down-o ConcreteAggregateA
+Element --o ConcreteAggregateB
+Element --o ConcreteIteratorA
+Element --o ConcreteIteratorB
+
+
+class OutputImpl
+
+class Client
+note top
+客户端类
+通过Iterator,Aggregate依赖其实现类
+end note
+
+Client .up.> OutputImpl
+
+OutputImpl ..> Aggregate
+Client ..> Iterator
+
+
+
+
+' 正文结束
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+	~~Something~~
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

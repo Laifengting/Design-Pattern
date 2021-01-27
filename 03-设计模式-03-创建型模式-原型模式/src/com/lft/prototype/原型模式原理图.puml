@@ -1,0 +1,145 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+' 标题
+title 原型模式原理图
+
+
+
+class Prototype{
+	+ clone(): Prototype
+}
+note top
+Prototype：抽象原型类。声明克隆自身的接口。
+end note
+
+class ConcretePrototypeA{
+	+ clone(): Prototype
+}
+note bottom
+ConcretePrototype：具体原型类。
+实现克隆的具体操作。返回自己的复制实例。
+end note
+
+
+Prototype <|-- ConcretePrototypeA
+
+class Client{
+	..Field..
+	- prototype: Prototype
+	- copy: Prototype
+	==Method==
+	+ {method} operation()
+}
+note bottom
+Client：客户类。让一个原型克隆自身，
+从而获得一个新的对象。
+copy = prototype.clone();
+end note
+
+Client .right.> Prototype
+
+note as note
+讲到原型模式，我们就不得不区分两个概念：深拷贝、浅拷贝。
+【浅拷贝】使用一个已知实例对新创建实例的成员变量逐个赋值，这个方式被称为浅拷贝。
+【深拷贝】当一个类的拷贝构造方法，不仅要复制对象的所有非引用成员变量值，还要为
+引用类型的成员变量创建新的实例，并且初始化为形式参数实例值。
+
+用原型实例指定创建对象的种类，并且通过复制这些原型创建新的对象。
+在原型模式中，所发动创建的对象通过请求原型对象来拷贝原型对象自己
+来实现创建过程，当然所发动创建的对象需要知道原型对象的类型。这里
+也就是说所发动创建的对象只需要知道原型对象的类型就可以获得更多的
+原型实例对象，至于这些原型对象时如何创建的根本不需要关心.
+end note
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

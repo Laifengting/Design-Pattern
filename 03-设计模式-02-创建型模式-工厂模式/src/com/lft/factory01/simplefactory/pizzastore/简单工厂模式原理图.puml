@@ -1,0 +1,168 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 标题
+title 简单工厂模式原理图
+
+
+/'
+Product 抽象产品
+'/
+interface Product
+note top
+抽象产品(Product)角色
+简单工厂模式所创建的所有对象的父类接口。
+它负责描述所有实例所共有的公共接口。
+end note
+
+/'
+具体产品类Product
+'/
+class ConcreteProductA
+class ConcreteProductB
+Product <|.down. ConcreteProductA
+Product <|.down. ConcreteProductB
+note as ConcreteProduct
+具体产品(ConcreteProduct)角色
+是简单工厂模式的创建目标，所有创建的对象
+都是充当这个角色的某个具体类的实例。
+end note
+ConcreteProduct .up. ConcreteProductA
+ConcreteProduct .up. ConcreteProductB
+
+/'
+工厂(Creator) 角色
+'/
+class Creator{
+	+ {static}{method} factoryMethod(): Product
+}
+note top
+工厂(Creator) 角色
+简单工厂模式的核心，
+它负责实现创建圆角窗口所有实例内部逻辑。
+工厂类创建产品类的方法可以被外界直接调
+用，创建所需的产品对象。
+一般方法设置为静态，所以双叫静态工厂方法。
+end note
+
+Product <.right. Creator
+ConcreteProductB <.. Creator
+ConcreteProductA <.. Creator
+
+
+' 【总结】
+' 简单工厂模式是属于创建型模式，
+' 又叫做静态工厂方法（Static Factory Method）模式，但不属于23种GOF设计模式之一。
+' 简单工厂模式是由一个工厂对象决定创建出哪一种产品类的实例。
+' 简单工厂模式是工厂模式家族中最简单实用的模式，可以理解为是不同工厂模式的一个特殊实现。
+' 简单工厂模式的实质是由一个工厂类根据传入的参数，动态决定应该创建哪一个产品类（这些产品类继承自一个父类或接口）的实例。
+'
+' 使用场景
+' 1、工厂类负责创建的对象比较少；
+' 2、客户只知道传入工厂类的参数，对于如何创建对象（逻辑）不关心；
+' 3、由于简单工厂很容易违反高内聚责任分配原则，因此一般只在很简单的情况下应用。
+'
+' JDK 中使用的简单工厂
+' 代替构造函数创建对象，方法名比构造函数清晰
+' 如Integer.valueOf，Class.forName等方法
+
+
+
+
+
+
+
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

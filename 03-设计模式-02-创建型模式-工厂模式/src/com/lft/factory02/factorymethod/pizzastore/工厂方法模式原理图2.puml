@@ -1,0 +1,150 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 标题
+title 工厂方法模式原理图
+
+interface Product
+class ConcreteProductA
+class ConcreteProductB
+Product <|.. ConcreteProductA
+Product <|.. ConcreteProductB
+note as ConcreteProduct
+所有的产品必须实现Product这个共同的接口，
+这样一来，使用这些产品的类就可以应用这个接
+口，而不是具体的类
+end note
+ConcreteProductA .. ConcreteProduct
+ConcreteProductB .. ConcreteProduct
+
+
+abstract class Creator{
+	+ {abstract}{method} factoryMethod(): Product
+	+ {method} otherMethod()
+}
+Product <.right. Creator : create
+note top
+Creator是一个抽象类，实现了所有操
+作产品的方法，但不实现工厂方法。
+Creator所有的子类都必须实现这个抽
+象方法factoryMethod()
+end note
+
+class ConcreteCreatorA{
+	+ {method} factoryMethod(): Product
+}
+class ConcreteCreatorB{
+	+ {method} factoryMethod(): Product
+}
+Creator <|-- ConcreteCreatorA
+Creator <|-- ConcreteCreatorB
+ConcreteProductA <.. ConcreteCreatorA
+ConcreteProductB <.. ConcreteCreatorB
+note as ConcreteCreator
+ConcreteCreatorA/ConcreteCreatorB实
+现了factoryMethod方法，以实际制造出不同的
+产品。
+ConcreteCreator负责创建一个或多个具
+体的产品，只有ConcreteCreator类知道如何创
+建这些产品类的实例。
+end note
+ConcreteCreatorA .. ConcreteCreator
+ConcreteCreatorB .. ConcreteCreator
+
+' 【总结】
+' 工厂方法模式定义了一个创建对象的接口，但由子类决定要实例化的类是哪一个。工厂方法把类的实例化推迟到子类。
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+
+@enduml

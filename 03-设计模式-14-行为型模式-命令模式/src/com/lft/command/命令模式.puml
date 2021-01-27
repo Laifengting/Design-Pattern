@@ -1,0 +1,209 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+' UML图标题
+title 命令模式
+
+' 命令接口，有两个抽象方法：执行，撤销。
+interface Command{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {abstract}{method} execute(): void
+	+ {abstract}{method} undo(): void
+}
+
+' 空命令
+class NoCommand
+note top
+NoCommand表示空命令
+对于简化操作有帮助
+可以省去对空的判断。
+end note
+NoCommand .left.|> Command
+
+' 开灯命令，重写执行撤销方法。
+class LightOnCommand{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {method} execute(): void
+	+ {method} undo(): void
+}
+LightOnCommand .up.|> Command
+
+' 关灯命令，重写执行撤销方法。
+class LightOffCommand{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {method} execute(): void
+	+ {method} undo(): void
+}
+LightOffCommand .up.|> Command
+
+' 灯泡，命令接收者，有开灯和关灯两个方法。
+class LightReceiver{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {method} on(): void
+	+ {method} off(): void
+}
+note left
+电灯
+end note
+LightReceiver -down-o LightOnCommand
+LightReceiver -down-o LightOffCommand
+
+' 摇控器
+class RemoteController{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {method} onCommands(): Command[]
+	+ {method} offCommands(): Command[]
+}
+note left :摇控器
+RemoteController o-right- Command
+
+class Client
+
+Client .up.> RemoteController
+'Client .up.> LightOnCommand
+'Client .right.> LightOffCommand
+'Client .right.> LightReceiver
+'Client .up.> TVOnCommand
+'Client .right.> TVOffCommand
+'Client .right.> TVReceiver
+
+
+' 扩展，添加电视机控制。
+' 开灯命令，重写执行撤销方法。
+class TVOnCommand{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {method} execute(): void
+	+ {method} undo(): void
+}
+TVOnCommand .down.|> Command
+
+' 关灯命令，重写执行撤销方法。
+class TVOffCommand{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {method} execute(): void
+	+ {method} undo(): void
+}
+TVOffCommand .down.|> Command
+
+
+' 灯泡，命令接收者，有开灯和关灯两个方法。
+class TVReceiver{
+	..Field..
+	--Constructor--
+	__Method__
+	+ {method} on(): void
+	+ {method} off(): void
+}
+note right
+电视
+end note
+TVReceiver -up-o TVOnCommand
+TVReceiver -up-o TVOffCommand
+
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

@@ -1,0 +1,470 @@
+'''' 导入标准库
+' Amazon Labs Library
+!include <awslib/AWSCommon>
+' Uncomment the following line to create simplified view
+!include <awslib/AWSSimplified>
+!include <awslib/General/Users>
+!include <awslib/Mobile/APIGateway>
+!include <awslib/SecurityIdentityAndCompliance/Cognito>
+!include <awslib/Compute/Lambda>
+!include <awslib/Database/DynamoDB>
+
+' AWS library
+!include <aws/common>
+!include <aws/Storage/AmazonS3/AmazonS3>
+!include <aws/Storage/AmazonS3/bucket/bucket>
+
+' Azure library
+!include <azure/AzureCommon.puml>
+!include <azure/Analytics/AzureEventHub.puml>
+!include <azure/Analytics/AzureStreamAnalytics.puml>
+!include <azure/Databases/AzureCosmosDb.puml>
+
+' Cloud Insight
+!include <cloudinsight/tomcat>
+!include <cloudinsight/kafka>
+!include <cloudinsight/java>
+!include <cloudinsight/cassandra>
+
+' Elastic library
+!include <elastic/common>
+!include <elastic/elasticsearch/elasticsearch>
+!include <elastic/logstash/logstash>
+!include <elastic/kibana/kibana>
+
+' Tupadr3 library
+!include <tupadr3/common>
+!include <tupadr3/font-awesome/server>
+!include <tupadr3/font-awesome/database>
+!include <tupadr3/devicons/mysql>
+
+' Google Material Icons
+!include <material/common>
+!include <material/folder_move>
+
+' Office
+!include <office/Servers/database_server>
+!include <office/Servers/application_server>
+!include <office/Concepts/firewall_orange>
+!include <office/Clouds/cloud_disaster_red>
+
+' ArchiMate
+!include <archimate/Archimate>
+
+' Kubernetes
+!include <kubernetes/k8s-sprites-unlabeled-25pct>
+
+
+
+' 通用不变样式
+!$FONTNAME_E				=			"Fira Code"
+!$FONTNAME_C				=			"微软雅黑"
+!$DPI						=			100
+!$ROUNDCORNER				=			10
+!$FALSE						=			"false"
+!$TRUE						=			"true"
+!$FONTSIZE20				=			20
+!$FONTSIZE18				=			18
+!$FONTSIZE16				=			16
+!$FONTSIZE14				=			14
+!$FONTSIZE10				=			10
+!$FONTSTYLE1				=			"Regular"
+!$FONTSTYLE2				=			"Bold"
+!$FONTSTYLE3				=			"Light"
+!$FONTSTYLE4				=			"Italic"
+!$ICONSIZE					=			14
+!$BORDERTHICKNESS1			=			1
+!$BORDERTHICKNESS2			=			2
+!$BORDERTHICKNESS3			=			3
+
+' 颜色样式
+!ifdef LIGHT
+' 类名颜色
+!$PRIMARYFONTCOLOR			=			"#283428"
+' 类属性文字颜色
+!$ATTRFONTCOLOR				=			"#4D524D"
+' 边框颜色
+!$SECONDARY					=			"#6D6D6D"
+' 箭头颜色
+!$ARROWCOLOR				=			"#6D6D6D"
+' 备注背景色
+!$NOTEBGCOLOR				=			"#E3EAED"
+' 备注边框颜色
+!$NOTEBORDERCOLOR			=			"#47A7AB"
+' 类图属性背景颜色
+!$BOXBG						=			"#E3EAED"
+' 类图头背景色
+!$HEADERCOLOR				=			"#CBD8D8"
+' 类图小圈图标颜色
+!$ABACKGROUNDCOLOR			=			"#C3E88D"
+!$CBACKGROUNDCOLOR			=			"#4FC3F7"
+!$EBACKGROUNDCOLOR			=			"#F78C6C"
+!$IBACKGROUNDCOLOR			=			"#C3E88D"
+!$NBACKGROUNDCOLOR			=			"#C691E9"
+!$ABORDERCOLOR				=			"#347998"
+!$CBORDERCOLOR				=			"#3683A5"
+!$EBORDERCOLOR				=			"#894D3E"
+!$IBORDERCOLOR				=			"#6F8150"
+!$NBORDERCOLOR				=			"#5D436A"
+' 全局背景色
+!$GLOBALBACKGROUNDCOLOR		=			"#E3EAED"
+!endif
+
+
+' 颜色样式
+!ifdef DARK
+' 类名颜色
+!$PRIMARYFONTCOLOR			=			"#FFF"
+' 类属性文字颜色
+!$ATTRFONTCOLOR				=			"#AAAAAA"
+' 边框颜色
+!$SECONDARY					=			"#000"
+' 箭头颜色
+!$ARROWCOLOR				=			"#FFF"
+' 备注背景颜色
+!$NOTEBGCOLOR				=			"#880000"
+' 备注边框颜色
+!$NOTEBORDERCOLOR			=			"#000"
+' 类图属性背景颜色
+!$BOXBG						=			"#2E2E2E"
+' 类图头背景色
+!$HEADERCOLOR				=			"#242424-#000000"
+' 类图小圈图标颜色
+!$ABACKGROUNDCOLOR			=			"#A9DCDF"
+!$CBACKGROUNDCOLOR			=			"#880000"
+!$EBACKGROUNDCOLOR			=			"#EB937F"
+!$IBACKGROUNDCOLOR			=			"#B4A7E5"
+!$NBACKGROUNDCOLOR			=			"#0AA01F"
+!$ABORDERCOLOR				=			"#A9DCDF"
+!$CBORDERCOLOR				=			"#880000"
+!$EBORDERCOLOR				=			"#EB937F"
+!$IBORDERCOLOR				=			"#B4A7E5"
+!$NBORDERCOLOR				=			"#0AA01F"
+' 全局背景色
+!$GLOBALBACKGROUNDCOLOR		=			"#2E2E2E"
+!endif
+
+
+
+!procedure baseStyle()
+	BackgroundColor						$BOXBG
+	BorderColor							$SECONDARY
+    BorderThickness						$BORDERTHICKNESS1
+!endprocedure
+
+!procedure titleStyle()
+	BackgroundColor						$HEADERCOLOR
+	BorderColor							$SECONDARY
+    BorderThickness						$BORDERTHICKNESS1
+	fontColor							$PRIMARYFONTCOLOR
+	fontName							$FONTNAME_C
+	fontSize							$FONTSIZE20
+	fontStyle							$FONTSTYLE3
+!endprocedure
+
+!procedure noteStyle()
+	BackgroundColor						$NOTEBGCOLOR
+	BorderColor							$NOTEBORDERCOLOR
+	BorderThickness						$BORDERTHICKNESS1
+	fontColor							$PRIMARYFONTCOLOR
+	fontName							$FONTNAME_C
+	fontSize							$FONTSIZE14
+	fontStyle							$FONTSTYLE3
+!endprocedure
+
+!procedure arrowStyle()
+	fontSize							$FONTSIZE14
+	Color								$ARROWCOLOR
+	Thickness							$BORDERTHICKNESS1
+!endprocedure
+
+!procedure fontStyle()
+	fontColor							$PRIMARYFONTCOLOR
+	fontName							$FONTNAME_C
+	fontSize							$FONTSIZE18
+	fontStyle							$FONTSTYLE1
+!endprocedure
+
+!procedure fontStyle16()
+	fontColor							$PRIMARYFONTCOLOR
+	fontName							$FONTNAME_C
+	fontSize							$FONTSIZE16
+	fontStyle							$FONTSTYLE1
+!endprocedure
+
+!procedure fontStyle14()
+	FontColor							$PRIMARYFONTCOLOR
+	FontName							$FONTNAME_C
+	FontSize							$FONTSIZE14
+	FontStyle							$FONTSTYLE1
+!endprocedure
+
+!procedure fontStyle10()
+	FontColor							$PRIMARYFONTCOLOR
+	FontName							$FONTNAME_C
+	FontSize							$FONTSIZE10
+	FontStyle							$FONTSTYLE1
+!endprocedure
+
+!procedure attrStyle()
+	AttributeIconSize					$ICONSIZE
+    AttributeFontColor					$ATTRFONTCOLOR
+    AttributeFontName					$FONTNAME_E
+    AttributeFontSize					$FONTSIZE16
+    AttributeFontStyle					$FONTSTYLE1
+!endprocedure
+
+!procedure packageStyle()
+    '''包样式 <<Node>> <<Rectangle>> <<Folder>> <<Frame>> <<Cloud>> <<Database>>
+    Style								Frame
+    TitleAlignment						center
+!endprocedure
+
+!procedure lifeLineStyle()
+	LifeLineBackgroundColor				$NOTEBGCOLOR
+	LifeLineBorderColor					$SECONDARY
+	LifeLineBorderThickness				$BORDERTHICKNESS1
+!endprocedure
+
+!procedure actorStyle()
+	BackgroundColor						$NOTEBGCOLOR
+	BorderColor							$ARROWCOLOR
+    BorderThickness						$BORDERTHICKNESS1
+!endprocedure
+
+!procedure participantStyle()
+	BackgroundColor						$HEADERCOLOR
+	BorderColor							$SECONDARY
+    BorderThickness						$BORDERTHICKNESS1
+!endprocedure
+
+
+!procedure rectangleStyle()
+	BackgroundColor						$HEADERCOLOR
+	BorderColor							$SECONDARY
+    BorderThickness						$BORDERTHICKNESS1
+!endprocedure
+
+!procedure activityDiamondStyle()
+	DiamondBackgroundColor				$NOTEBGCOLOR
+	DiamondBorderColor					$SECONDARY
+    DiamondBorderThickness				$BORDERTHICKNESS1
+!endprocedure
+
+!procedure activityBaseStyle()
+BackgroundColor						$HEADERCOLOR
+	BorderColor							$SECONDARY
+    BorderThickness						$BORDERTHICKNESS1
+!endprocedure
+
+!procedure archimateStyle()
+	BackgroundColor						$HEADERCOLOR
+	BorderColor							$SECONDARY
+    BorderThickness						$BORDERTHICKNESS1
+	FontColor							#BLACK
+	FontName							$FONTNAME_C
+	FontSize							$FONTSIZE10
+	FontStyle							$FONTSTYLE1
+!endprocedure
+
+
+
+' 全局样式
+skinparam {
+	' 全局背景颜色
+	backgroundColor						$GLOBALBACKGROUNDCOLOR
+	' 默认文本对齐方式
+	defaultTextAlignment				left
+	' 画布样式
+	DiagramBorderColor					$SECONDARY
+	DiagramBorderThickness				$BORDERTHICKNESS1
+	' 分辨率
+	Dpi									$DPI
+	' 是否启用阴影
+	Shadowing							$FALSE
+	' 圆角
+	Roundcorner							$ROUNDCORNER
+	' 手写样式是否启用
+	Handwritten							$FALSE
+	' 时序图，返回消息位于箭头下方
+	ResponseMessageBelowArrow			$TRUE
+	Padding								0
+	BoxPadding							0
+	ParticipantPadding					0
+}
+
+' 标题样式
+skinparam Title{
+	titleStyle()
+}
+
+' 箭头样式
+skinparam Arrow{
+	fontStyle()
+	arrowStyle()
+}
+
+' 注释样式
+skinparam Note{
+	noteStyle()
+}
+
+' 类图主样式
+skinparam Class{
+    HeaderBackgroundColor				$HEADERCOLOR
+	baseStyle()
+	fontStyle()
+	attrStyle()
+}
+
+' 类图头标志样式
+skinparam Stereotype{
+    ABackgroundColor					$ABACKGROUNDCOLOR
+    CBackgroundColor					$CBACKGROUNDCOLOR
+    EBackgroundColor					$EBACKGROUNDCOLOR
+    IBackgroundColor					$IBACKGROUNDCOLOR
+    NBackgroundColor					$NBACKGROUNDCOLOR
+    ABorderColor						$ABORDERCOLOR
+    CBorderColor						$CBORDERCOLOR
+    EBorderColor						$EBORDERCOLOR
+    IBorderColor						$IBORDERCOLOR
+    NBorderColor						$NBORDERCOLOR
+}
+
+' 类图包样式
+skinparam Package{
+	baseStyle()
+    fontStyle()
+	packageStyle()
+}
+
+' 时序图生命线样式
+skinparam Sequence{
+	lifeLineStyle()
+}
+
+' 时序图类
+skinparam Participant{
+	participantStyle()
+    fontStyle()
+}
+
+' 时序图角色
+skinparam Actor{
+	actorStyle()
+	fontStyle()
+}
+
+' 矩形样式
+skinparam Rectangle{
+	rectangleStyle()
+	fontStyle()
+}
+
+' 用例图样式
+skinparam Usecase{
+    baseStyle()
+    fontStyle16()
+}
+	
+' 说明样式
+skinparam Legend{
+	baseStyle()
+	noteStyle()
+}
+
+' 页头样式
+skinparam Header{
+	fontStyle14()
+}
+
+' 页脚样式
+skinparam Footer{
+	fontStyle14()
+}
+
+' 字幕样式
+skinparam Caption{
+	fontStyle14()
+}
+
+' 活动图样式
+skinparam Activity{
+    activityBaseStyle()
+	fontStyle14()
+	activityDiamondStyle()
+    BarColor								$NOTEBORDERCOLOR
+    StartColor								$ABACKGROUNDCOLOR
+    EndColor								$EBACKGROUNDCOLOR
+}
+
+' 状态图样式
+skinparam State{
+	AttributeFontColor						$PRIMARYFONTCOLOR
+	AttributeFontName						$FONTNAME_E
+	AttributeFontSize						$FONTSIZE16
+	AttributeFontStyle						$FONTSTYLE1
+	baseStyle()
+	fontStyle()
+	StartColor								$ABACKGROUNDCOLOR
+	EndColor								$EBACKGROUNDCOLOR
+	MessageAlignment						Center
+}
+
+' 组件图样式
+skinparam Component{
+	baseStyle()
+	fontStyle16()
+	StereotypeFontColor						$PRIMARYFONTCOLOR
+	StereotypeFontName						$FONTNAME_E
+	StereotypeFontSize						$FONTSIZE16
+	StereotypeFontStyle						$FONTSTYLE1
+	Style Light
+
+}
+
+' 接口样式
+skinparam Interface{
+	BackgroundColor							$NOTEBGCOLOR
+    BorderColor								$NOTEBORDERCOLOR
+    fontStyle10()
+    StereotypeFontColor						$PRIMARYFONTCOLOR
+    StereotypeFontName						$FONTNAME_E
+    StereotypeFontSize						$FONTSIZE14
+    StereotypeFontStyle						$FONTSTYLE1
+}
+
+' 对象图样式
+skinparam Object{
+	AttributeFontColor						$ATTRFONTCOLOR
+	AttributeFontName						$FONTNAME_C
+	AttributeFontSize						$FONTSIZE14
+	AttributeFontStyle						$FONTSTYLE1
+
+	baseStyle()
+	fontStyle()
+
+	StereotypeFontColor						$PRIMARYFONTCOLOR
+	StereotypeFontName						$FONTNAME_E
+	StereotypeFontSize						$FONTSIZE14
+	StereotypeFontStyle						$FONTSTYLE1
+}
+
+' 架构图样式
+skinparam Archimate{
+	archimateStyle()
+	StereotypeFontColor						$PRIMARYFONTCOLOR
+	StereotypeFontName						$FONTNAME_E
+	StereotypeFontSize						$FONTSIZE14
+	StereotypeFontStyle						$FONTSTYLE1
+}
+
+' 云图样式
+skinparam Cloud{
+	baseStyle()
+	fontStyle()
+	StereotypeFontColor						$PRIMARYFONTCOLOR
+	StereotypeFontName						$FONTNAME_E
+	StereotypeFontSize						$FONTSIZE14
+	StereotypeFontStyle						$FONTSTYLE1
+}

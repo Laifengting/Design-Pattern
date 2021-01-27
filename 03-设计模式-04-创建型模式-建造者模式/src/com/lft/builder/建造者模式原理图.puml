@@ -1,0 +1,475 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+' 标题
+title 建造者模式原理图
+
+'将一个复杂的构建与其表示相分离，使得同样的构建过程可以创建不同的表示。
+'建造模式是将复杂的内部创建封装在内部，对于外部调用的人来说，只需要传入建造者和建造工具，对于内部是如何建造成成品的，调用者无需关心
+
+abstract class Builder{
+	+ {abstract}{method} builderPartA(): void
+	+ {abstract}{method} builderPartB(): void
+	+ {abstract}{method} getResult(): Product
+}
+note right
+抽象Builder，规范产品的组建，
+提供组建产品的所有方法，
+其中可以全部是抽象方法，
+或部分抽象方法。
+一般是由子类实现具体组建过程。
+end note
+
+class ConcreteBuilder1{
+	..Field..
+	- {field} product: Product
+	==Method==
+	+ {method} builderPartA(): void
+	+ {method} builderPartB(): void
+	+ {method} getResult(): Product
+}
+ConcreteBuilder1 -up-|> Builder
+
+class ConcreteBuilder2{
+	..Field..
+	- {field} product: Product
+	==Method==
+	+ {method} builderPartA(): void
+	+ {method} builderPartB(): void
+	+ {method} getResult(): Product
+}
+ConcreteBuilder2 -up-|> Builder
+
+note as ConcreteBuilder
+具体的Builder实现类，
+具体的创建对象。
+实现Builder中的所有抽象方法，
+用于创建具体的对象。
+不同的Builder实现类，
+以不同的方式，创建不同的对象。
+end note
+ConcreteBuilder .left. ConcreteBuilder1
+ConcreteBuilder .right. ConcreteBuilder2
+
+
+abstract class Product{
+	..Field..
+	- {field} partList: List<String>
+	==Method==
+	+ {method} addPart(String): void
+	+ {method} show(): void
+}
+note bottom
+抽象产品类
+end note
+Product .down.* ConcreteBuilder1
+Product .down.* ConcreteBuilder2
+
+class ConcreteProduct1 extends Product
+class ConcreteProduct2 extends Product
+
+ConcreteBuilder1 ..> ConcreteProduct1 : create
+ConcreteBuilder2 ..> ConcreteProduct2 : create
+
+note as ConcreteProduct
+具体的产品。
+end note
+ConcreteProduct .up. ConcreteProduct1
+ConcreteProduct .up. ConcreteProduct2
+
+class Director{
+	..Field..
+	- {field} builder: Builder
+	--Constructor--
+	+ Director(Builder)
+	==Method==
+	+ {method} construct(Builder): void
+}
+note top
+Director类，指挥者，统一组建过程。
+end note
+Director o-right- Builder : +builder
+
+
+class Client
+
+Client .up.> Director
+Client .right.> ConcreteBuilder1
+Client .right.> ConcreteBuilder2
+
+
+
+'建造者模式的优点
+' 1、建造者模式的封装性很好。使用建造者模式可以有效的封装变化，在使用建造者模式的场景中，
+' 一般产品类和建造者类是比较稳定的，因此，将主要的业务逻辑封装在导演类中对整体而言可以取得比较好的稳定性。
+' 2、建造者模式很容易进行扩展。如果有新的需求，通过实现一个新的建造者类就可以完成，
+' 基本上不用修改之前已经测试通过的代码，因此也就不会对原有功能引入风险。
+'
+' 建造者模式与工厂模式的区别
+' 1、建造者模式与工厂模式是极为相似的，总体上，建造者模式仅仅只比工厂模式多了一个“导演类”的角色。
+' 在建造者模式的类图中，假如把这个导演类看做是最终调用的客户端，那么图中剩余的部分就可以看作是一个简单的工厂模式了。
+' 2、与工厂模式相比，建造者模式一般用来创建更为复杂的对象，因为对象的创建过程更为复杂，因此将对象的创建过程独立出来
+' 组成一个新的类——导演类。也就是说，工厂模式是将对象的全部创建过程封装在工厂类中，由工厂类向客户端提供最终的产品；
+' 而建造者模式中，建造者类一般只提供产品类中各个组件的建造，而将具体建造过程交付给导演类。由导演类负责将各个组件按
+' 照特定的规则组建为产品，然后将组建好的产品交付给客户端。
+
+' 【总结】
+' 建造者模式与工厂模式类似，适用的场景也很相似。一般来说，如果产品的建造很复杂，那么请用工厂模式；
+' 如果产品的建造更复杂，那么请用建造者模式。
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+
+'''' 关键字
+abstract
+actor
+agent
+archimate
+artifact
+boundary
+card
+class
+cloud
+component
+control
+database
+detach
+diamond
+entity
+enum
+file
+folder
+frame
+interface
+node
+object
+package
+participant
+queue
+rectangle
+stack
+state
+storage
+usecase
+enddot
+endsalt
+enduml
+startdot
+startsalt
+startuml
+across
+activate
+again
+allow_mixing
+allowmixing
+also
+alt
+as
+autonumber
+bottom
+box
+break
+caption
+center
+create
+critical
+deactivate
+destroy
+down
+else
+elseif
+end
+endif
+endwhile
+footbox
+footer
+fork
+group
+header
+hide
+hnote
+if
+is
+kill
+left
+legend
+link
+loop
+mainframe
+namespace
+newpage
+note
+of
+on
+opt
+order
+over
+package
+page
+par
+partition
+ref
+repeat
+return
+right
+rnote
+rotate
+show
+skin
+skinparam
+split
+sprite
+start
+stereotype
+stop
+style
+title
+top
+top to bottom direction
+up
+while
+
+''''颜色
+APPLICATION
+AliceBlue
+AntiqueWhite
+Aqua
+Aquamarine
+Azure
+BUSINESS
+Beige
+Bisque
+Black
+BlanchedAlmond
+Blue
+BlueViolet
+Brown
+BurlyWood
+CadetBlue
+Chartreuse
+Chocolate
+Coral
+CornflowerBlue
+Cornsilk
+Crimson
+Cyan
+DarkBlue
+DarkCyan
+DarkGoldenRod
+DarkGray
+DarkGreen
+DarkGrey
+DarkKhaki
+DarkMagenta
+DarkOliveGreen
+DarkOrchid
+DarkRed
+DarkSalmon
+DarkSeaGreen
+DarkSlateBlue
+DarkSlateGray
+DarkSlateGrey
+DarkTurquoise
+DarkViolet
+Darkorange
+DeepPink
+DeepSkyBlue
+DimGray
+DimGrey
+DodgerBlue
+FireBrick
+FloralWhite
+ForestGreen
+Fuchsia
+Gainsboro
+GhostWhite
+Gold
+GoldenRod
+Gray
+Green
+GreenYellow
+Grey
+HoneyDew
+HotPink
+IMPLEMENTATION
+IndianRed
+Indigo
+Ivory
+Khaki
+Lavender
+LavenderBlush
+LawnGreen
+LemonChiffon
+LightBlue
+LightCoral
+LightCyan
+LightGoldenRodYellow
+LightGray
+LightGreen
+LightGrey
+LightPink
+LightSalmon
+LightSeaGreen
+LightSkyBlue
+LightSlateGray
+LightSlateGrey
+LightSteelBlue
+LightYellow
+Lime
+LimeGreen
+Linen
+MOTIVATION
+Magenta
+Maroon
+MediumAquaMarine
+MediumBlue
+MediumOrchid
+MediumPurple
+MediumSeaGreen
+MediumSlateBlue
+MediumSpringGreen
+MediumTurquoise
+MediumVioletRed
+MidnightBlue
+MintCream
+MistyRose
+Moccasin
+NavajoWhite
+Navy
+OldLace
+Olive
+OliveDrab
+Orange
+OrangeRed
+Orchid
+PHYSICAL
+PaleGoldenRod
+PaleGreen
+PaleTurquoise
+PaleVioletRed
+PapayaWhip
+PeachPuff
+Peru
+Pink
+Plum
+PowderBlue
+Purple
+Red
+RosyBrown
+RoyalBlue
+STRATEGY
+SaddleBrown
+Salmon
+SandyBrown
+SeaGreen
+SeaShell
+Sienna
+Silver
+SkyBlue
+SlateBlue
+SlateGray
+SlateGrey
+Snow
+SpringGreen
+SteelBlue
+TECHNOLOGY
+Tan
+Teal
+Thistle
+Tomato
+Turquoise
+Violet
+Wheat
+White
+WhiteSmoke
+Yellow
+YellowGreen
+'/
+@enduml

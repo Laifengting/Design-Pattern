@@ -1,0 +1,182 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 说明文字
+'caption 中介者模式示例图
+
+' 页眉
+left header
+中介者模式示例图
+end header
+
+' 页脚
+right footer
+中介者模式示例图
+end footer
+
+' 图例说明
+legend top
+【中介者模式-智能家庭的操作流程】
+1. 创建 ConcreteMediator 对象
+2. 创建各个同事类对象，比如：Alarm、CoffeeMachine、TV、Curtains..
+3. 在创建同事类对象的时候，就直接通过构造器，加入到colleagueMap中
+4. 同事类对象，可以调用sendMessage()方法，最终会去调用ConcreteMediator的getMessage()方法
+5. getMessage()方法会根据接收到的同事对象发出的消息来协调调用其他同事对象，完成任务
+6. getMessage()方法是核心方法，完成相应任务
+end legend
+
+' 标题
+title 中介者模式示例图
+
+
+
+' 正文开始
+
+
+
+
+abstract class Mediator
+
+class ConcreteMediator{
+	- colleagueMap: HashMap
+	+ getMessage(): void
+}
+
+ConcreteMediator -up-|> Mediator
+
+abstract class Colleague{
+	+ sendMessage(): void
+	+ getMediator(): Mediator
+}
+
+Mediator <-right-> Colleague : association
+
+ConcreteMediator o-up- Colleague
+
+class Alarm
+class CoffeeMachine
+class Curtains
+class TV
+
+note as ConcreteColleagueNote
+具体同事类
+在创建同事类对象的时候，就直接通过构造器，
+加入到colleagueMap中
+end note
+
+ConcreteColleagueNote .up. Alarm
+ConcreteColleagueNote .up. CoffeeMachine
+ConcreteColleagueNote .up. Curtains
+ConcreteColleagueNote .up. TV
+
+Alarm -up-|> Colleague
+CoffeeMachine -up-|> Colleague
+Curtains -up-|> Colleague
+TV -up-|> Colleague
+
+Alarm .up.> Mediator
+CoffeeMachine .up.> Mediator
+Curtains .up.> Mediator
+TV .up.> Mediator
+
+class Client
+Client ..> Mediator
+Client ..> Colleague
+
+
+
+
+' 正文结束
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

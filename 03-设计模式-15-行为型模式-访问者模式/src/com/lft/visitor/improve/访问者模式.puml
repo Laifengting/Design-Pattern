@@ -1,0 +1,198 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 标题
+title 访问者模式
+
+' 说明文字
+'caption 访问者模式
+
+' 页眉
+left header
+访问者模式
+end header
+
+' 页脚
+center footer
+<font color=YELLOW>【概念】
+<font color=YELLOW>双重分派(双分派)——在访问者模式中，即Student角色student，首先调用
+<font color=YELLOW>了accept(Visitor)方法“接收”访问者(具体的学生)，而被接收的访问者
+<font color=YELLOW>Visitor(Company)再调用visit(Student)方法访问当前student对象。
+end footer
+
+' 图例说明
+legend top
+【需求】
+公司考核若干个大学生和研究生，以决定是否录用。在这个问题中,大学生和研究生都有自己的成绩，
+但是他们不能依据自己的成绩单制定录用标准，录用标准必须是公司来确定。
+end legend
+
+
+interface Visitor{
+	+ {abstract}{method} visit(Undergraduate): void
+	+ {abstract}{method} visit(GraduateStudent): void
+}
+note bottom of Visitor
+抽象访问者类
+一个接口，定义操作具体元素类的方法visit()。
+end note
+
+class Company implements Visitor{
+	+ {method} visit(Undergraduate): void
+	+ {method} visit(GraduateStudent): void
+}
+note as ConcreteVisitorNote
+具体访问者类
+实现了Visitor接口中声明的每个操作。
+制定具体的规则,成绩是多少才能被录取。
+end note
+
+ConcreteVisitorNote .up. Company
+
+interface Student{
+	+ {abstract}{method} accept(Visitor): void
+}
+Visitor  <-right->  Student
+note right of Student
+抽象元素类
+定义了接收访问者的accept操作。
+end note
+
+class Undergraduate extends Student{
+	- math: Double
+	- english: Double
+	- name: String
+	+ Undergraduate(String,Double,Double)
+	+ getMath(): Double
+	+ getEnglish(): Double
+	+ getName(): String
+	+ {method} accept(Visitor): void
+}
+class GraduateStudent extends Student{
+	- math: Double
+	- english: Double
+	- physics: Double
+	- name: String
+	+ Undergraduate(String,Double,Double,Double)
+	+ getMath(): Double
+	+ getEnglish(): Double
+	+ getPhysics(): Double
+	+ getName(): String
+	+ {method} accept(Visitor): void
+}
+note as ConcreteElement
+具体元素类
+是抽象元素类Student的子类。
+实现了accept()方法。
+end note
+ConcreteElement .up. GraduateStudent
+ConcreteElement .up. Undergraduate
+
+class ObjectStructure{
+	studentList: List<Student>
+}
+note right
+对象结构类
+一个集合，用于存放抽象类的对象，
+提供遍历它自己的方法。
+end note
+
+ObjectStructure o-down- Student
+
+class Client
+
+Client ..> Visitor
+Client ..> ObjectStructure
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+	~~Something~~
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

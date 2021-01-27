@@ -1,0 +1,180 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 说明文字
+'caption 中介者模式原理图
+
+' 页眉
+left header
+中介者模式原理图
+end header
+
+' 页脚
+right footer
+中介者模式原理图
+end footer
+
+'' 图例说明
+'legend top
+'【需求】
+'公司考核若干个大学生和研究生，以决定是否录用。在这个问题中,大学生和研究生都有自己的成绩，
+'但是他们不能依据自己的成绩单制定录用标准，录用标准必须是公司来确定。
+'end legend
+
+' 标题
+title 中介者模式原理图
+
+
+
+' 正文开始
+
+
+
+
+abstract class Mediator
+note left
+抽象中介者
+定义了同事对旬到中介者对象的接口
+end note
+class ConcreteMediator{
+	- colleagueMap: HashMap
+}
+
+ConcreteMediator -up-|> Mediator
+note bottom of ConcreteMediator
+具体的中介类
+实现抽象类的方法，他需要知道所有的具体的同事类
+以一个集合来管理（HashMap），并接收某个同事
+对象消息，完成相应的任务
+1.管理所有的同事类
+2.完成相应的操作和任务
+end note
+
+abstract class Colleague
+note right
+抽象同事类
+end note
+
+Mediator <-right-> Colleague : association
+
+ConcreteMediator o-up- Colleague
+
+class ConcreteColleagueA
+class ConcreteColleagueB
+
+note as ConcreteColleagueNote
+具体的同事类
+会有很多，每个同事只知道自己的行为，
+而不了解其他同事类的行为(方法),但是
+他们都依赖中介者对象。
+end note
+ConcreteColleagueNote .up. ConcreteColleagueB
+ConcreteColleagueNote .up. ConcreteColleagueA
+
+ConcreteColleagueA -up-|> Colleague
+ConcreteColleagueB -up-|> Colleague
+
+ConcreteColleagueA .up.> Mediator
+ConcreteColleagueB .up.> Mediator
+
+class Client
+Client ..> Mediator
+Client ..> Colleague
+
+
+
+
+' 正文结束
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

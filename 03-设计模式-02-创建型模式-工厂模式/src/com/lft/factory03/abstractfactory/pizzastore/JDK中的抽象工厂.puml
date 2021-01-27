@@ -1,0 +1,303 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+' 标题
+title JDK中的抽象工厂
+
+' JDBC创建连接MySQL/Oracle的连接操作数据库
+package java.sql{
+	class DriverManager{
+		+ {static}{method} getConnection(String): Connection
+	}
+	interface Connection{
+		+ {abstract}{method} createStatement(): Statement
+		+ {abstract}{method} prepareStatement(String): PreparedStatement
+		+ {abstract}{method} prepareCall(String): CallableStatement
+	}
+
+	interface Statement
+	interface PreparedStatement
+	PreparedStatement --|> Statement : extends
+	interface CallableStatement
+	CallableStatement --|> PreparedStatement : extends
+
+	DriverManager .right.> Connection : create
+	Connection ..> Statement : create
+	Connection ..> PreparedStatement : create
+	Connection ..> CallableStatement : create
+
+
+	note top of Connection
+	【抽象工厂】
+	抽象工厂接口。
+	声明了创建三种执行数据库操作的对象的方法。
+	end note
+
+	note as AbstractStatement
+	JDBC关于Statement的三个接口
+	end note
+	AbstractStatement .left. Statement
+	AbstractStatement .left. PreparedStatement
+	AbstractStatement .left. CallableStatement
+}
+
+
+package com.mysql.jdbc{
+	interface com.mysql.jdbc.Connection
+	com.mysql.jdbc.Connection  --|> Connection : extends
+
+	interface MySQLConnection
+	MySQLConnection -down-|> com.mysql.jdbc.Connection : extends
+	class ConnectionImpl{
+		+ {method} createStatement(): Statement
+		+ {method} prepareCall(String): CallableStatement
+		+ {method} prepareStatement(String): PreparedStatement
+	}
+	ConnectionImpl .right.|> MySQLConnection : implements
+
+	interface com.mysql.jdbc.Statement
+	com.mysql.jdbc.Statement --|> Statement : extends
+
+	class StatementImpl
+	StatementImpl ..|> com.mysql.jdbc.Statement : implements
+
+	class com.mysql.jdbc.PreparedStatement
+	com.mysql.jdbc.PreparedStatement --|> StatementImpl : extends
+	com.mysql.jdbc.PreparedStatement ..|> PreparedStatement : implements
+
+	class com.mysql.jdbc.CallableStatement
+	com.mysql.jdbc.CallableStatement --|> com.mysql.jdbc.PreparedStatement : extends
+	com.mysql.jdbc.CallableStatement ..|> CallableStatement : implements
+
+	ConnectionImpl ..> StatementImpl : create
+	ConnectionImpl ..> com.mysql.jdbc.PreparedStatement : create
+	ConnectionImpl ..> com.mysql.jdbc.CallableStatement : create
+
+	note top of ConnectionImpl
+	【具体工厂】
+	抽象工厂接口的具体实现类MySQL的。
+	实现了Connection声明的三种执行
+	数据库操作的对象的方法。
+	end note
+
+	note as ConcreteStatementImpl
+	MySQL实现的一组关于Statement三种接口的实现类
+	end note
+	ConcreteStatementImpl .left. StatementImpl
+	ConcreteStatementImpl .left. com.mysql.jdbc.PreparedStatement
+	ConcreteStatementImpl .left. com.mysql.jdbc.CallableStatement
+}
+
+package oracle.jdbc{
+	interface OracleConnection
+    OracleConnection  -right-|> Connection : extends
+
+	class OracleConnectionWrapper{
+		+ {method} createStatement(): Statement
+		+ {method} prepareCall(String): CallableStatement
+		+ {method} prepareStatement(String): PreparedStatement
+	}
+	OracleConnectionWrapper ..|> OracleConnection : implements
+
+	interface OracleStatement
+	OracleStatement --|> Statement  : extends
+
+	interface OraclePreparedStatement
+	OraclePreparedStatement --|> PreparedStatement : extends
+	OraclePreparedStatement --|> OracleStatement : extends
+
+	interface OracleCallableStatement
+	OracleCallableStatement --|> CallableStatement : extends
+	OracleCallableStatement --|> OraclePreparedStatement : extends
+
+	package oracle.jdbc.internal{
+		interface oracle.jdbc.internal.OracleStatement
+		oracle.jdbc.internal.OracleStatement --|> OracleStatement : extends
+
+		interface oracle.jdbc.internal.OraclePreparedStatement
+		oracle.jdbc.internal.OraclePreparedStatement --|> OraclePreparedStatement : extends
+		oracle.jdbc.internal.OraclePreparedStatement --|> oracle.jdbc.internal.OracleStatement : extends
+
+		interface oracle.jdbc.internal.OracleCallableStatement
+		oracle.jdbc.internal.OracleCallableStatement --|> OracleCallableStatement : extends
+		oracle.jdbc.internal.OracleCallableStatement --|> oracle.jdbc.internal.OraclePreparedStatement : extends
+	}
+
+	package oracle.jdbc.driver{
+		class OracleStatementWrapper
+		OracleStatementWrapper ..|> oracle.jdbc.internal.OracleStatement : implements
+
+		class OraclePreparedStatementWrapper
+		OraclePreparedStatementWrapper --|> OracleStatementWrapper : extends
+		OraclePreparedStatementWrapper ..|> oracle.jdbc.internal.OraclePreparedStatement : implements
+
+		class OracleCallableStatementWrapper
+		OracleCallableStatementWrapper --|> OraclePreparedStatementWrapper : extends
+		OracleCallableStatementWrapper ..|> oracle.jdbc.internal.OracleCallableStatement : implements
+	}
+
+	OracleConnectionWrapper ..> OracleStatementWrapper : create
+	OracleConnectionWrapper ..> OraclePreparedStatementWrapper : create
+	OracleConnectionWrapper ..> OracleCallableStatementWrapper : create
+
+	note top of OracleConnectionWrapper
+	【具体工厂】
+	抽象工厂接口的具体实现类Oracle的。
+	实现了Connection声明的三种执行
+	数据库操作的对象的方法。
+	end note
+
+	note as OracleConcreteStatementImpl
+	Oracle实现的一组关于Statement三种接口的实现类
+	end note
+	OracleConcreteStatementImpl .left. OracleStatementWrapper
+	OracleConcreteStatementImpl .left. OraclePreparedStatementWrapper
+	OracleConcreteStatementImpl .left. OracleCallableStatementWrapper
+}
+
+
+
+
+
+
+
+'
+'package oracle.jdbc{
+'	interface OracleConnection
+'	OracleConnection -right-|> Connection : extends
+'
+'	class OracleConnectionWrapper{
+'		+ {method} createStatement(): Statement
+'		+ {method} prepareStatement(String): PreparedStatement
+'		+ {method} prepareCall(String): CallableStatement
+'	}
+'
+'	OracleConnectionWrapper .left.|> OracleConnection : implements
+'	note top of OracleConnectionWrapper
+'	【具体工厂】
+'	抽象工厂接口的具体实现类Oracle的。
+'	实现了Connection声明的三种执行
+'	数据库操作的对象的方法。
+'	end note
+'
+'	interface OracleStatement
+'	OracleStatement -left-|> Statement : extends
+'
+'	interface OraclePreparedStatement
+'	oracle.jdbc.OraclePreparedStatement --|> PreparedStatement
+'	oracle.jdbc.OraclePreparedStatement --|> OracleStatement
+'
+'	package oracle.jdbc.internal{
+'		interface OracleStatement
+'		OracleStatement -up-|> oracle.jdbc.OracleStatement : extends
+'
+'		interface OraclePreparedStatement
+'		OraclePreparedStatement --|> oracle.jdbc.OraclePreparedStatement
+'		OraclePreparedStatement --|> oracle.jdbc.internal.OracleStatement
+'	}
+'
+'	package oracle.jdbc.driver{
+'		class OracleStatementWrapper
+'    	OracleStatementWrapper .up.|> OracleStatement : implements
+'
+'    	class OraclePreparedStatementWrapper
+'    	OraclePreparedStatementWrapper -up-|> OracleStatementWrapper
+'    	OraclePreparedStatementWrapper .up.|> oracle.jdbc.internal.OraclePreparedStatement
+'	}
+'}
+
+
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+
+@enduml

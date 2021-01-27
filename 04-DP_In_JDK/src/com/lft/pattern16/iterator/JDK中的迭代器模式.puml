@@ -1,0 +1,193 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 说明文字
+'caption JDK中的迭代器模式
+
+' 页眉
+left header
+JDK中的迭代器模式
+end header
+
+' 页脚
+right footer
+JDK中的迭代器模式
+end footer
+
+' 图例说明
+legend top
+【总结】
+[优点]：
+1. 迭代器模式提供一个统一的方法遍历对象，客户不用再考虑聚合的类型，使用一种方法就可以遍历对象了。
+2. 隐藏了聚合的内部结构，客户端要遍历聚合的时候只能取到迭代器。而不会知道聚合的具体组成。
+3. 提供了一种设计思想，就是一个类应该只有一个引起变化的原因（单一职责）在聚合类中，我们把迭代器分开，
+    就是要把管理对象集合和遍历对象集合的责任分开，这样一来集合改变的话，只影响到聚合对象。而如果遍历
+    方式改变的话，只影响到了迭代器。
+4. 当要展示一组相似对象，或者遍历一组相同对象时适合使用迭代器模式。
+
+[缺点]：每个聚合对象都要一个迭代器，会生成多个迭代器不好管理类。
+end legend
+
+' 标题
+title JDK中的迭代器模式
+
+
+
+' 正文开始
+
+
+interface Iterator<E>{
+	+ {abstract} hasNext(): boolean
+	+ {abstract} next(): E
+	+ {abstract} remove(): void
+}
+note left
+JDK自带的接口。
+end note
+
+
+interface List<E>{
+	+ {abstract} iterator(): Iterator<E>
+}
+note top
+List 相当于迭代器模式中的聚合接口
+含有iterator()方法，返回一个迭代器对象。
+end note
+
+class LinkedList<E>{
+	- elements: Object[]
+	+ descendingIterator(): Iterator<E>
+}
+
+LinkedList .right.|> List
+
+class ArrayList<E> implements List{
+	- elements: Object[]
+	+ iterator(): Iterator<E>
+}
+note left of ArrayList
+是实现了聚合接口List的子类，
+实现了iterator()方法。
+end note
+
+
+class Enumerator
+Enumerator .left.|> Iterator
+
+class Itr implements Iterator
+note right of Itr
+ArrayList内部类
+充当具体实现迭代器Iterator接口的类
+end note
+
+Itr -right-* ArrayList
+
+class Object
+
+Object -down-o ArrayList
+
+Itr ..> Object : use >
+
+class Client
+
+Client ..> List
+Client ..> Iterator
+
+
+
+
+' 正文结束
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

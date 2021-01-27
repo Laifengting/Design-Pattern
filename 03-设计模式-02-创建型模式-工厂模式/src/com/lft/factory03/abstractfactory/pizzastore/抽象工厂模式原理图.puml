@@ -1,0 +1,169 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+' UML图标题
+title 抽象工厂模式原理图
+
+
+interface ProductA
+interface ProductB
+class ConcreteProductA1
+class ConcreteProductA2
+class ConcreteProductB1
+class ConcreteProductB2
+
+ProductA <|.down. ConcreteProductA1
+ProductA <|.down. ConcreteProductA2
+ProductB <|.down. ConcreteProductB1
+ProductB <|.down. ConcreteProductB2
+
+
+interface Creator{
+	+{abstract}{method} factoryA(): ProductA
+	+{abstract}{method} factoryB(): ProductB
+}
+Creator .up.> ProductA : create
+Creator .up.> ProductB : create
+
+class ConcreteCreator1{
+	+{method} factoryA(): ProductA
+	+{method} factoryB(): ProductB
+}
+class ConcreteCreator2{
+	+{method} factoryA(): ProductA
+	+{method} factoryB(): ProductB
+}
+
+ConcreteCreator1 .up.> ConcreteProductA1
+ConcreteCreator1 .up.> ConcreteProductB1
+ConcreteCreator2 .up.> ConcreteProductA2
+ConcreteCreator2 .up.> ConcreteProductB2
+
+Creator <|.up. ConcreteCreator1
+Creator <|.up. ConcreteCreator2
+
+note bottom of Creator
+Creator是一个接口，有创建各种产品的抽象方法。
+Creator所有的子类都必须实现这些抽象方法。
+end note
+
+note as ConcreteCreator
+ConcreteCreator实现了Creator中
+的抽象方法，以实际制造出产品实例。
+ConcreteCreator负责创建一个或多
+个具体产品，只有ConcreteCreator类
+知道如何创建这些产品。
+end note
+ConcreteCreator .. ConcreteCreator1
+ConcreteCreator .. ConcreteCreator2
+
+
+note as Product
+所有的产品必须实现这两个中的一个接口，
+这样一来，使用这些产品的类就可以依赖
+这个接口，而不是直接依赖具体类。
+end note
+Product .. ProductA
+Product .. ProductB
+
+
+
+' [总结]
+' 1、 所有的工厂都是用来封装对象的创建。
+' 2、 简单工厂，虽然不是真正的设计模式，但仍不失为一个简单的方法，可以将客户程序从具体类解耦。
+' 3、 工厂方法，使用继承，把对象的创建委托给子类，由子类来实现工厂方法来创建对象。
+' 4、 抽象工厂，使用对象组合，对象的创建被实现在工厂接口所暴露出来的方法中。
+
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+
+@enduml

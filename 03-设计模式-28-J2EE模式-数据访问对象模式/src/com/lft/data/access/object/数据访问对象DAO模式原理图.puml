@@ -1,0 +1,191 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 说明文字
+'caption 数据访问对象DAO模式原理图
+
+' 页眉
+left header
+数据访问对象DAO模式原理图
+end header
+
+' 页脚
+right footer
+数据访问对象DAO模式原理图
+end footer
+
+'' 图例说明
+'legend top
+'【需求】
+'公司考核若干个大学生和研究生，以决定是否录用。在这个问题中,大学生和研究生都有自己的成绩，
+'但是他们不能依据自己的成绩单制定录用标准，录用标准必须是公司来确定。
+'end legend
+
+' 标题
+title 数据访问对象DAO模式原理图
+
+
+
+' 正文开始
+
+
+
+
+interface DataAccessObjectInterface{
+	+ getAllModelObjects(): List
+	+ updateModelObject(): void
+	+ deleteModelObject(): void
+	+ addModelObject(): void
+}
+note right
+数据访问对象接口(Data Access Object Interface)
+该接口定义了在一个模型对象上要执行的标准操作。
+end note
+
+class DataAccessObjectConcreteClass implements DataAccessObjectInterface{
+	- modelObjectList: List
+	+ DataAccessObjectConcreteClass()
+	+ getAllModelObjects(): List
+	+ updateModelObject(): void
+	+ deleteModelObject(): void
+	+ addModelObject(): void
+}
+note bottom of DataAccessObjectConcreteClass
+数据访问对象实体类(Data Access Object concrete class)
+该类实现了DataAccessObjectInterface接口
+该类负责从数据源获取数据，数据源可以是数据库，
+也可以是 xml，或者是其他的存储机制。
+end note
+
+class ModelObject{
+	- attr1: String
+	- attr2: String
+	+ ModelObject()
+	+ getAttr1(): String
+	+ setAttr1(): void
+	+ getAttr2(): String
+	+ setAttr2(): void
+}
+note bottom
+模型对象/数值对象(Model Object/Value Object)
+该对象是简单的POJO，包含了get/set方法
+来存储通过使用DAO类检索到的数据。
+end note
+
+DataAccessObjectConcreteClass o-left- ModelObject
+
+class Client{
+	+ main(): void
+}
+
+Client .right.> DataAccessObjectInterface
+
+
+
+
+' 正文结束
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface 接口
+	' 棒棒糖接口()-- ()- --() -()
+	接口 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 关系
+dependence
+generalization
+implements
+generalization
+association
+aggregation
+composition
+
+' 默认方法名
+operation(): void
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

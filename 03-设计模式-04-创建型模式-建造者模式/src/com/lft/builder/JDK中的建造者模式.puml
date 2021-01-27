@@ -1,0 +1,396 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+' 标题
+title JDK中的建造者模式
+
+class StringBuilder{
+	+ {method} append(CharSequence): StringBuilder
+}
+
+abstract class AbstractStringBuilder{
+	+ {method} append(CharSequence): AbstractStringBuilder
+}
+note right
+AbstractStringBuilder：具体建造者，
+它实现了Appendable接口的append(Character c)方法。
+end note
+
+interface Appendable{
+	+ {abstract}{method} append(CharSequence): Appendable
+}
+note right
+Appendable：抽象建造者，定义了创建对象的接口。
+end note
+
+interface CharSequence
+
+AbstractStringBuilder .up.|> Appendable
+AbstractStringBuilder .up.|> CharSequence
+
+StringBuilder -up-|> AbstractStringBuilder
+
+note right of StringBuilder
+StringBuilder继承了AbstractStringBuilder抽象类，
+而AbstractStringBuilder实现了Appendable接口。
+StringBuilder：指挥者类，持有具体建造者的引用，
+由于StringBuilder继承了AbstractStringBuilder，
+这里StringBuilder通过super来作为具体建造者的引用。
+end note
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+
+'''' 关键字
+abstract
+actor
+agent
+archimate
+artifact
+boundary
+card
+class
+cloud
+component
+control
+database
+detach
+diamond
+entity
+enum
+file
+folder
+frame
+interface
+node
+object
+package
+participant
+queue
+rectangle
+stack
+state
+storage
+usecase
+enddot
+endsalt
+enduml
+startdot
+startsalt
+startuml
+across
+activate
+again
+allow_mixing
+allowmixing
+also
+alt
+as
+autonumber
+bottom
+box
+break
+caption
+center
+create
+critical
+deactivate
+destroy
+down
+else
+elseif
+end
+endif
+endwhile
+footbox
+footer
+fork
+group
+header
+hide
+hnote
+if
+is
+kill
+left
+legend
+link
+loop
+mainframe
+namespace
+newpage
+note
+of
+on
+opt
+order
+over
+package
+page
+par
+partition
+ref
+repeat
+return
+right
+rnote
+rotate
+show
+skin
+skinparam
+split
+sprite
+start
+stereotype
+stop
+style
+title
+top
+top to bottom direction
+up
+while
+
+''''颜色
+APPLICATION
+AliceBlue
+AntiqueWhite
+Aqua
+Aquamarine
+Azure
+BUSINESS
+Beige
+Bisque
+Black
+BlanchedAlmond
+Blue
+BlueViolet
+Brown
+BurlyWood
+CadetBlue
+Chartreuse
+Chocolate
+Coral
+CornflowerBlue
+Cornsilk
+Crimson
+Cyan
+DarkBlue
+DarkCyan
+DarkGoldenRod
+DarkGray
+DarkGreen
+DarkGrey
+DarkKhaki
+DarkMagenta
+DarkOliveGreen
+DarkOrchid
+DarkRed
+DarkSalmon
+DarkSeaGreen
+DarkSlateBlue
+DarkSlateGray
+DarkSlateGrey
+DarkTurquoise
+DarkViolet
+Darkorange
+DeepPink
+DeepSkyBlue
+DimGray
+DimGrey
+DodgerBlue
+FireBrick
+FloralWhite
+ForestGreen
+Fuchsia
+Gainsboro
+GhostWhite
+Gold
+GoldenRod
+Gray
+Green
+GreenYellow
+Grey
+HoneyDew
+HotPink
+IMPLEMENTATION
+IndianRed
+Indigo
+Ivory
+Khaki
+Lavender
+LavenderBlush
+LawnGreen
+LemonChiffon
+LightBlue
+LightCoral
+LightCyan
+LightGoldenRodYellow
+LightGray
+LightGreen
+LightGrey
+LightPink
+LightSalmon
+LightSeaGreen
+LightSkyBlue
+LightSlateGray
+LightSlateGrey
+LightSteelBlue
+LightYellow
+Lime
+LimeGreen
+Linen
+MOTIVATION
+Magenta
+Maroon
+MediumAquaMarine
+MediumBlue
+MediumOrchid
+MediumPurple
+MediumSeaGreen
+MediumSlateBlue
+MediumSpringGreen
+MediumTurquoise
+MediumVioletRed
+MidnightBlue
+MintCream
+MistyRose
+Moccasin
+NavajoWhite
+Navy
+OldLace
+Olive
+OliveDrab
+Orange
+OrangeRed
+Orchid
+PHYSICAL
+PaleGoldenRod
+PaleGreen
+PaleTurquoise
+PaleVioletRed
+PapayaWhip
+PeachPuff
+Peru
+Pink
+Plum
+PowderBlue
+Purple
+Red
+RosyBrown
+RoyalBlue
+STRATEGY
+SaddleBrown
+Salmon
+SandyBrown
+SeaGreen
+SeaShell
+Sienna
+Silver
+SkyBlue
+SlateBlue
+SlateGray
+SlateGrey
+Snow
+SpringGreen
+SteelBlue
+TECHNOLOGY
+Tan
+Teal
+Thistle
+Tomato
+Turquoise
+Violet
+Wheat
+White
+WhiteSmoke
+Yellow
+YellowGreen
+'/
+@enduml

@@ -1,0 +1,177 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 标题
+title JDK中的工厂方法模式
+
+interface Iterator<E>{
+	+ {abstract}{method} next(): E
+	+ {abstract}{method} hasNext(): boolean
+	+ {abstract}{method} remove(): void
+}
+
+class ArrayList$Itr
+Iterator <|.. ArrayList$Itr
+
+interface ListIterator<E>{
+	+{abstract}{method} previous(): E
+	+{abstract}{method} hasPrevious(): boolean
+}
+Iterator <|-- ListIterator
+
+class ArrayList$ListItr
+ListIterator <|.. ArrayList$ListItr
+
+class LinkedList$ListItr
+ListIterator <|.. LinkedList$ListItr
+
+note as Product
+ArrayList$Itr,ArrayList$ListItr,LinkedList$ListItr是
+实现Iterator接口的具体产品类
+
+end note
+Product .up. ArrayList$Itr
+Product .up. ArrayList$ListItr
+Product .up. LinkedList$ListItr
+
+interface Iterable<T>{
+	+ {abstract}{method} iterator(): Iterator<T>
+}
+Iterable .right.> Iterator : create
+
+
+interface Collection<E>
+interface List<E>{
+	+ {abstract}{method} listIterator(): ListIterator<E>
+	+ {abstract}{method} listIterator(int): ListIterator<E>
+}
+
+Iterable <|-- Collection
+Iterable <|-- List
+
+abstract class AbstractCollection<E>{
+	+ {abstract}{method} iterator(): Iterator<E>
+}
+Collection <|.. AbstractCollection
+
+abstract class AbstractList<E>
+AbstractCollection <|--AbstractList
+List <|.. AbstractList
+
+class ArrayList<E> extends AbstractList{
+	+ {method} iterator(): Iterator<E>
+	+ {method} listIterator(): ListIterator<E>
+	+ {method} listIterator(int): ListIterator<E>
+}
+
+abstract class AbstractSequentialList<E> extends AbstractList{
+	+ {method} iterator(): Iterator<E>
+	+ {abstract}{method} listIterator(int): ListIterator<E>
+}
+class LinkedList<E> extends AbstractSequentialList implements List{
+	+ {method} listIterator(int): ListIterator<E>
+}
+
+note as Creator
+ArrayList和LinkedList是具体工厂类
+end note
+Creator .up. ArrayList
+Creator .up. LinkedList
+
+' 【总结】
+' 工厂方法模式定义了一个创建对象的接口，但由子类决定要实例化的类是哪一个。工厂方法把类的实例化推迟到子类。
+' ArrayList和LinkedList使用具体的工厂类的iterator方法，分别创建实现Iterator接口类的ArrayList$Itr和ArrayList$ListItr,以及LinkedList$ListItr的具体产品类。
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+
+@enduml

@@ -1,0 +1,176 @@
+@startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
+' 允许各种图混合使用
+allowmixing
+
+' 说明文字
+'caption 解释器模式示例图
+
+' 页眉
+left header
+解释器模式示例图
+end header
+
+' 页脚
+right footer
+解释器模式示例图
+end footer
+
+' 图例说明
+legend top
+【原理】
+使用到Stack
+1. 设计模式
+2. 程序本身逻辑
+
+搞清程序设计模式 + Debug源码
+end legend
+
+' 标题
+title 解释器模式示例图
+
+
+
+' 正文开始
+
+
+
+' 抽象表达式
+abstract class AbstractExpression{
+	+ {abstract}{method} interpreter(): void
+}
+note top
+抽象表达式类
+声明一个抽象的解释方法，
+这个方法为抽象语法树中所有的节点(子类)所共享。
+end note
+
+' 终结符表达式
+class VarExpression
+note left
+变量表达式类——终结符表达式类
+实现与文法中的终结符相关的解释操作。
+end note
+
+VarExpression -up-|> AbstractExpression
+
+' 非终结符表达式
+class SymbolExpression
+note right
+符号表达式类——非终结符表达式类
+为文法中的非终结符实现解释操作。
+end note
+SymbolExpression o-up-|> AbstractExpression
+
+class SubExpression
+class AddExpression
+
+SubExpression -up-|> SymbolExpression
+AddExpression -up-|> SymbolExpression
+
+class Context
+note top
+环境角色类
+含有解释器之外的全局信息
+end note
+AbstractExpression --o Context
+
+class Client
+Client .up.> Context
+Client .right.> AbstractExpression
+
+
+
+
+' 正文结束
+
+
+
+/''''说明与样式
+' 类之间的关系
+依赖关系..>     .>		<.		<..
+继承关系--|>    -|>		<|-		<|--
+实现关系..|>    .|>		<|.		<|..
+关联关系-->     <-->		--		->		<->
+聚合关系--o     <--o		o-		o--
+组合关系--*     <--*		*-		*--
+
+' 访问权限
+- private
+# protected
+~ default
++ public
+
+' 备注
+1. note top of Object : 备注在对象的四周
+2. note "无方位位置" as Note1
+3. note left: 备注在前一个类的四周
+4. note on link #red : 链接注释
+5. note left of Object
+	注释内容
+   end note
+
+' 包
+package com.lft.design.pattern {
+	' 接口
+	interface Interface
+	' 棒棒糖接口()-- ()- --() -()
+	Interface2 ()-- A
+	' 抽象类
+	abstract class AbstractClass
+}
+' 枚举
+enum TimeUnit{
+	DAYS
+	HOURS
+	MINUTES
+	SECONDS
+}
+
+' 泛型
+class Eye<? extends Head>{
+
+}
+
+' 命名空间
+namespace net.dummy #DDDDDD {
+	Meeting o-- Person
+	.BaseClass <|- Meeting
+}
+
+' 改变箭头方向 left right up down
+A .up.> B
+
+' 关系类
+class Student{
+	Name
+}
+Student "0..*" -- "1..*" Course
+(Student, Course) . Enrollment
+class Enrollment{
+	drop()
+	cancel()
+}
+
+' 普通类
+class Person{
+	..Field..
+	{field}				- name: String
+	{static}{field}		- head: Head
+	--Constructor--
+	+ Person(name: String)
+	==Method==
+	{method}			+ getName(): String
+	{abstract}{method}	+ doSomething(): void
+	__Other__
+}
+class Head
+Person "1" *-- "1" Head : contains >
+
+' 类说明
+class A << (I,#FF7700) 说明 >>
+' 箭头颜色
+A .[#395862].> B
+'/
+@enduml

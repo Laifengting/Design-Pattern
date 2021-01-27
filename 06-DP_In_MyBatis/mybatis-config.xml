@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!--*********************Mybatis的核心配置文件*********************-->
+	<!--
+		properties标签用来定义键值对的属性
+			resource属性引入属性配置文件
+			property标签内如果定义了键值对，而resource引入的属性配置文件，也有相同的key的时候，以外部的属性配置文件值为准。
+				外部引入的属性配置文件会覆盖property标签定义的值。
+
+		如果一个属性在不只一个地方进行了配置，那么，MyBatis 将按照下面的顺序来加载：
+			首先读取在 properties 元素体内指定的属性。
+			然后根据 properties 元素中的 resource 属性读取类路径下属性文件，或根据 url 属性指定的路径读取属性文件，并覆盖之前读取过的同名属性。
+			最后读取作为方法参数传递的属性，并覆盖之前读取过的同名属性。
+			因此，通过方法参数传递的属性具有最高优先级，resource/url 属性中指定的配置文件次之，最低优先级的则是 properties 元素中指定的属性。
+	-->
+	<properties resource = "jdbc.properties"/>
+
+	<settings>
+		<!--
+			是否开启驼峰命名自动映射，即从数据库列名A_COLUMN，映射到Java属性名aColumn。
+		-->
+		<setting name = "mapUnderscoreToCamelCase"
+				 value = "true"/>
+
+		<!--
+			将积极加载改为消极加载，按需加载
+			1.先将积极加载设置为false
+		-->
+		<setting name = "aggressiveLazyLoading"
+				 value = "false"/>
+
+		<!--
+			2.打开延迟加载的开关
+		-->
+		<setting name = "lazyLoadingEnabled"
+				 value = "true"/>
+
+		<!--
+			启用二级缓存步骤：
+			1：cacheEnabled的value设置为true
+			2：到UserMapper.xml文件中加入cache标签，标记UserMapper开启二级缓存
+				<cache type = "com.lft.cache.MyCache"/>
+		-->
+		<setting name = "cacheEnabled"
+				 value = "true"/>
+	</settings>
+
+	<typeAliases>
+		<!--
+			方式一：
+				为每个JavaBean单独配置
+		-->
+		<!--<typeAlias type = "com.lft.pojo.User"
+				   alias = "User"/>-->
+
+		<!--
+			方式二：
+				package标签设置通过包名来扫描，所有的类。自动配置上别名。
+				默认的别名，就是类名，而且首字母小写。
+			方便，但会出现部分乱码
+		-->
+		<package name = "com.lft.pojo"/>
+	</typeAliases>
+
+	<environments default = "development">
+		<!--environment 标签配置一个数据库环境-->
+		<environment id = "development">
+			<!--
+				transactionManager 配置事务管理
+					JDBC 有提交和回滚
+					MANAGER 没有提交和回滚
+			-->
+			<transactionManager type = "JDBC"/>
+			<!--
+				dataSource 配置是否使用数据库连接池
+					POOLED 表示使用数据库连接池
+					UNPOOLED 表示不使用数据库连接池
+			-->
+			<dataSource type = "POOLED">
+				<property name = "driver"
+						  value = "${driver}"/>
+				<property name = "url"
+						  value = "${url}"/>
+				<property name = "username"
+						  value = "${username}"/>
+				<property name = "password"
+						  value = "${password}"/>
+			</dataSource>
+		</environment>
+
+		<environment id = "test">
+			<transactionManager type = "JDBC"/>
+			<dataSource type = "POOLED">
+				<property name = "driver"
+						  value = "${driver}"/>
+				<property name = "url"
+						  value = "${url}"/>
+				<property name = "username"
+						  value = "${username}"/>
+				<property name = "password"
+						  value = "${password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+
+	<databaseIdProvider type = "DB_VENDOR">
+		<property name = "SQL Server"
+				  value = "sqlserver"/>
+		<property name = "DB2"
+				  value = "db2"/>
+		<property name = "MySQL"
+				  value = "mysql"/>
+		<property name = "Oracle"
+				  value = "oracle"/>
+	</databaseIdProvider>
+
+	<mappers>
+		<!--
+			方法一：直接指定配置文件的相对路径
+		-->
+		<!--<mapper resource = "com/lft/mapper/UserMapper.xml"/>-->
+
+		<!--
+			方法二：按指定的类进行搜索mapper.xml配置文件信息
+				这种Mapper接口。通过类查找mapper.xml配置文件方案。
+					要求：接口和mapper.xml配置文件，必须在同一个包下。
+		-->
+		<!--<mapper class = "com.lft.mapper.UserMapper"/>-->
+
+		<!--
+			方法三：通过指定包的方式扫描接口和mapper.xml配置文件
+			会出现部分乱码
+		-->
+		<package name = "com.lft.mapper"/>
+	</mappers>
+</configuration>
