@@ -4,26 +4,29 @@
 ' 允许各种图混合使用
 allowmixing
 
-' 标题
-title 访问者模式原理图
-
 ' 说明文字
-caption 访问者模式原理图
+'caption 传输对象模式示例图
 
 ' 页眉
-left header
-访问者模式原理图
-end header
+'left header
+'接口隔离原则
+'end header
 
 ' 页脚
-right footer
-访问者模式原理图
-end footer
+'right footer
+'接口隔离原则
+'end footer
 
-' 图例说明
+'' 图例说明
 'legend top
 '【需求】
+'公司考核若干个大学生和研究生，以决定是否录用。在这个问题中,大学生和研究生都有自己的成绩，
+'但是他们不能依据自己的成绩单制定录用标准，录用标准必须是公司来确定。
 'end legend
+
+' 正文开始
+' UML图标题
+title 访问者模式原理图
 
 interface Visitor{
 	+ {abstract}{method} operation1(): void

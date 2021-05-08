@@ -1,6 +1,30 @@
 @startuml
+!define DARK
+!include G:\WorkSpace\Java\IJCode\Design-Pattern\lib\LFT-UML.puml
 ' 允许各种图混合使用
 allowmixing
+
+' 说明文字
+'caption 传输对象模式示例图
+
+' 页眉
+'left header
+'接口隔离原则
+'end header
+
+' 页脚
+'right footer
+'接口隔离原则
+'end footer
+
+'' 图例说明
+'legend top
+'【需求】
+'公司考核若干个大学生和研究生，以决定是否录用。在这个问题中,大学生和研究生都有自己的成绩，
+'但是他们不能依据自己的成绩单制定录用标准，录用标准必须是公司来确定。
+'end legend
+
+' 正文开始
 ' UML图标题
 title 关联关系
 
@@ -101,107 +125,4 @@ class A << (I,#FF7700) 说明 >>
 ' 箭头颜色
 A .[#395862].> B
 '/
-
-
-'' 类图样式
-
-' 全局样式
-skinparam {
-	' 全局背景颜色
-	backgroundColor #F0F7F7
-
-	' 画布样式
-	DiagramBorderColor #677C81
-	DiagramBorderThickness 1
-
-	' 分辨率
-	Dpi 1920
-
-	' 是否启用阴影
-	Shadowing false
-
-
-	' 手写样式是否启用
-	handwritten false
-
-	' 标题样式
-	TitleBackgroundColor #CBD8D8
-	TitleBorderColor #A5ADAD
-	TitleBorderRoundCorner 16
-	TitleBorderThickness 1
-	TitleFontColor #6A8181
-	TitleFontName YouYuan
-	TitleFontSize 20
-
-	' 箭头
-	ArrowColor #6D6D6D
-    ArrowThickness 1
-	ArrowFontColor #6D6D6D
-	ArrowFontName  Fira Code
-	ArrowFontSize 16
-
-	' 注释样式
-	NoteBackgroundColor #E3EAED
-	NoteBorderColor #47A7AB
-    NoteFontColor #283428
-    NoteFontName YouYuan
-    NoteFontSize 16
-
-	' 类图主样式
-	ClassBackgroundColor #E3EAED
-    ClassHeaderBackgroundColor #CBD8D8
-	ClassBorderColor #A0A4AF
-    ClassBorderThickness 1
-    ClassAttributeIconSize 14
-    ClassAttributeFontName  Fira Code
-    ClassAttributeFontColor #303030
-    ClassAttributeFontSize 16
-    ClassFontColor #283428
-'    ClassFontName Fira Code
-    ClassFontSize 18
-
-    ' 图头标志样式
-    StereotypeABackgroundColor #C3E88D
-    StereotypeABorderColor #347998
-    StereotypeCBackgroundColor #4FC3F7
-    StereotypeCBorderColor #3683A5
-    StereotypeEBackgroundColor #F78C6C
-    StereotypeEBorderColor #894D3E
-    StereotypeIBackgroundColor #C3E88D
-    StereotypeIBorderColor #6F8150
-    StereotypeNBackgroundColor #C691E9
-    StereotypeNBorderColor #5D436A
-
-	' 类图包样式
-	PackageBackgroundColor #EAF9F7-#D4F1F2
-	PackageBorderThickness 1
-	PackageBorderColor 6D6D6D
-    PackageFontColor #283428
-    PackageFontName Fira Code
-    PackageFontSize 18
-    '''包样式 <<Node>> <<Rectangle>> <<Folder>> <<Frame>> <<Cloud>> <<Database>>
-    PackageStyle Frame
-    PackageTitleAlignment center
-
-	' 用例图样式
-    UsecaseBackgroundColor #CBD8D8
-    UsecaseBorderColor #A0A4AF
-    UsecaseBorderThickness 1
-    UsecaseFontColor #283428
-    UsecaseFontName Fira Code
-    UsecaseFontSize 16
-    UsecaseStereotypeFontColor #283428
-    UsecaseStereotypeFontName Fira Code
-    UsecaseStereotypeFontSize 12
-
-	' 矩形样式
-	RectangleBackgroundColor #E3EAED
-	RectangleBorderColor #A0A4AF
-	RectangleBorderThickness 1
-	RectangleFontColor #283428
-	RectangleFontName Fira Code
-	RectangleFontSize 18
-	' 字体样式 Normal Bold Italic
-	RectangleFontStyle Bold Italic
-}
 @enduml
