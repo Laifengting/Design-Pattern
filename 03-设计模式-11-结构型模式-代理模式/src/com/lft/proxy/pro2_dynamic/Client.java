@@ -26,6 +26,7 @@ public class Client {
 		System.out.println("proxyInstance= " + proxyInstance.getClass());
 		
 		proxyInstance.teach();
+		
 		proxyInstance.sayHello("Tom");
 	}
 }

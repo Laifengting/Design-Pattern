@@ -31,29 +31,29 @@ title 静态代理
 
 ' 正文开始
 
-interface ITeacherDao{
+interface TeacherDao{
 	+ {method} teach(): void
 }
 
-class TeacherDao{
+class TeacherDaoImpl{
 	+ {method} teach(): void
 }
 
-ITeacherDao <|.right. TeacherDao
+TeacherDao <|.down. TeacherDaoImpl
 
 class TeacherDaoProxy{
-	- {field} target: ITeacherDao
-	+ {method} teach(): void
+	- {field} target: TeacherDao
+	+ {method} postTeach(): void
 }
 
-ITeacherDao <|.left. TeacherDaoProxy
-TeacherDaoProxy o-down- TeacherDao
+TeacherDao <|.down. TeacherDaoProxy
+TeacherDaoProxy o-right- TeacherDaoImpl
 
 
 class Client
 
 Client .up.> TeacherDaoProxy
-Client .right.> TeacherDao
+Client .up.> TeacherDaoImpl
 
 note bottom of Client
 1. 创建TeacherDaoProxy代理对象。

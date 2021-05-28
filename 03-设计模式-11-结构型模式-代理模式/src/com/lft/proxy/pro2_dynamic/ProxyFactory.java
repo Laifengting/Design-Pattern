@@ -23,7 +23,7 @@ public class ProxyFactory {
 	
 	/**
 	 * 构造器，对target进行初始化
-	 * @param target
+	 * @param target 需要代理的目标类
 	 */
 	public ProxyFactory(Object target) {
 		this.target = target;
@@ -31,10 +31,11 @@ public class ProxyFactory {
 	
 	/**
 	 * 给目标对象，生成一个代理对象。
-	 * @return
+	 * @return 代理对象
 	 */
 	public Object getProxyInstance() {
-		/**
+		
+		/*
 		 * 说明：
 		 * @param loader 指定当前目标对象使用的类加载器，获取加载器的方法固定
 		 * @param interfaces 目标对象实现的接口类型，使用泛型方式确认类型
@@ -42,18 +43,18 @@ public class ProxyFactory {
 		 * @return
 		 * public static Object newProxyInstanc e(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h)
 		 */
+		ClassLoader loader = target.getClass().getClassLoader();
+		Class<?>[] interfaces = target.getClass().getInterfaces();
 		return Proxy.newProxyInstance(
-				target.getClass().getClassLoader(),
-				target.getClass().getInterfaces(),
+				loader,
+				interfaces,
 				new InvocationHandler() {
 					@Override
 					public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-						System.out.println("JDK代理开始...");
-						
+						System.out.println("目标对象方法调用之前 可以增强操作...");
 						// 通过反射机制调用目标对象的方法。
 						Object returnValue = method.invoke(target, args);
-						
-						System.out.println("JDK代理提交...");
+						System.out.println("目标对象方法调用之后 可以增强操作...");
 						return returnValue;
 					}
 				});
